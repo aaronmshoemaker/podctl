@@ -1,7 +1,7 @@
 class PixelMapper:
     strands = None
     total_leds = 0
-    max_brightness = 256
+    max_brightness = 128    # Max is 256. Artificially cap brightness to limit amperage draw. Todo: automatically set based on available power supply.
     base_color = (0, 0, 0)
     base_color_changed = False
 
