@@ -12,8 +12,8 @@ from os import environ
 # TODO: Fix class variable names
 pixelmapper = PixelMapper(
     [
-        Strand(0, 32),
-        Strand(32, 32),
+        Strand(13, 35),
+        Strand(54, 10),
      ]
 )
 pixelcontroller = PixelController()
@@ -105,6 +105,9 @@ def main():
 
         if OPTS.debug:
             print("Detected joystick '%s'" % JOYSTICKS[-1].get_name())
+
+    # Set initial color to indicate readiness
+    pixelcontroller.set_color(0, 64, 0)
 
     while 1:
         try:
