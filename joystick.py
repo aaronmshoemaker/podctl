@@ -59,7 +59,7 @@ def proc_event(event):
 
     # Handle shutdown signal
     if len(PRESSED_BUTTONS.intersection(SHUTDOWN_SEQUENCE)) == len(SHUTDOWN_SEQUENCE):
-        os.system("init 0")
+        shutdown()
 
     if ACTIVE_MODE:
         ACTIVE_MODE.input(event, AXIS_INPUT, PRESSED_BUTTONS)
@@ -86,6 +86,11 @@ def restart_mode():
         ACTIVE_MODE.stop()
 
     ACTIVE_MODE.start()
+
+
+def shutdown():
+    pixelcontroller.fade(128, 0, 0, 0, 0, 0, 2, 20)
+    os.system("init 0")
 
 
 def get_opts():
