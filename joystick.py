@@ -13,10 +13,10 @@ from os import environ
 pixelmapper = PixelMapper(
     [
         Strand(0, 35),
-        Strand(64, 99),
-        Strand(128, 163),
-        Strand(192, 227),
-        Strand(256, 291),
+        Strand(64, 35),
+        Strand(128, 35),
+        Strand(192, 35),
+        Strand(256, 35),
      ]
 )
 pixelcontroller = PixelController()
