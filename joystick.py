@@ -89,7 +89,7 @@ def restart_mode():
 
 
 def shutdown():
-    pixelcontroller.fade(128, 0, 0, 0, 0, 0, 2, 20)
+    pixelcontroller.fade(128, 0, 0, 0, 0, 0, 4, 20)
     os.system("init 0")
 
 
