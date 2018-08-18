@@ -45,7 +45,7 @@ class PixelController:
         b = start_b
 
         for i in range(int(steps)):
-            self.set_pod_color(int(r), int(g), int(b))
+            self.set_color(int(r), int(g), int(b))
 
             if i < steps:
                 r += r_step
