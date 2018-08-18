@@ -12,8 +12,11 @@ from os import environ
 # TODO: Fix class variable names
 pixelmapper = PixelMapper(
     [
-        Strand(13, 35),
-        Strand(54, 10),
+        Strand(0, 35),
+        Strand(64, 99),
+        Strand(128, 163),
+        Strand(192, 227),
+        Strand(256, 291),
      ]
 )
 pixelcontroller = PixelController()
