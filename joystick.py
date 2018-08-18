@@ -8,6 +8,7 @@ from modes.joyspin import Joyspin
 from modes.chase import Chase
 from modes.simplecolor import SimpleColor
 from os import environ
+import os
 
 # TODO: Fix class variable names
 pixelmapper = PixelMapper(
@@ -55,6 +56,10 @@ def proc_event(event):
         cycle_mode()
     elif event.type == pygame.JOYBUTTONUP and event.button == BTN_START:
         restart_mode()
+
+    # Handle shutdown signal
+    if len(PRESSED_BUTTONS.intersection(SHUTDOWN_SEQUENCE)) == len(SHUTDOWN_SEQUENCE):
+        os.system("init 0")
 
     if ACTIVE_MODE:
         ACTIVE_MODE.input(event, AXIS_INPUT, PRESSED_BUTTONS)
