@@ -16,7 +16,8 @@ class Joyspin:
             for i in range(0, trail):
                 trail_pixels.append((color[0] - i * 10, color[1] - i * 10, color[2] - i * 10))
 
-            s.leds[0:trail] = trail_pixels
+            s.set_solid_color()
+            s.set_range(trail_pixels)
 
         print("%s started" % __name__)
 

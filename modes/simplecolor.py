@@ -4,12 +4,14 @@ from constants import *
 class SimpleColor:
     pixelmapper = None
     pixelcontroller = None
+    tick_ms = None
     axis_state = None
     pressed_buttons = None
 
-    def __init__(self, pixelmapper, pixelcontroller):
+    def __init__(self, pixelmapper, pixelcontroller, tick_ms=100):
         self.pixelmapper = pixelmapper
         self.pixelcontroller = pixelcontroller
+        self.tick_ms = tick_ms
 
     def start(self):
         print("%s started" % __name__)

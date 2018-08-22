@@ -7,18 +7,31 @@ from pixelmapper import PixelMapper, Strand
 from modes.joyspin import Joyspin
 from modes.chase import Chase
 from modes.simplecolor import SimpleColor
+from modes.pulse import Pulse
 from os import environ
 import os
 
 # TODO: Fix class variable names
 pixelmapper = PixelMapper(
     [
-        Strand(0, 35),
-        Strand(64, 35),
-        Strand(128, 35),
-        Strand(192, 35),
-        Strand(256, 35),
+        Strand(0, 34),
+        Strand(64, 34),
+        Strand(128, 34),
+        Strand(192, 34),
+        Strand(256, 34),
      ]
+    # [
+    #     Strand(0, 15),
+    #     Strand(15, 15, inverted=True),
+    #     Strand(64, 15),
+    #     Strand(79, 15, inverted=True),
+    #     Strand(128, 15),
+    #     Strand(143, 15, inverted=True),
+    #     Strand(192, 15),
+    #     Strand(207, 15, inverted=True),
+    #     Strand(256, 15),
+    #     Strand(271, 15, inverted=True),
+    # ]
 )
 pixelcontroller = PixelController()
 OPTS = None
@@ -27,8 +40,9 @@ AXIS_INPUT = [0, 0]
 PRESSED_BUTTONS = set()
 MODES = [
     SimpleColor(pixelmapper, pixelcontroller),
-    Chase(pixelmapper, pixelcontroller),
-    Joyspin(pixelmapper, pixelcontroller)
+    Chase(pixelmapper, pixelcontroller, 300),
+    # Joyspin(pixelmapper, pixelcontroller),
+    Pulse(pixelmapper, pixelcontroller, 300),
 ]
 ACTIVE_MODE_IDX = -1
 ACTIVE_MODE = None
@@ -46,6 +60,8 @@ def proc_event(event):
         PRESSED_BUTTONS.add(event.button)
     elif event.type == pygame.JOYBUTTONUP:
         PRESSED_BUTTONS.remove(event.button)
+    elif event.type == pygame.USEREVENT and ACTIVE_MODE:
+        ACTIVE_MODE.tick()
 
     if OPTS.debug:
         print PRESSED_BUTTONS
@@ -76,6 +92,8 @@ def cycle_mode():
     ACTIVE_MODE = MODES[ACTIVE_MODE_IDX]
 
     ACTIVE_MODE.start()
+
+    pygame.time.set_timer(pygame.USEREVENT, ACTIVE_MODE.tick_ms)
 
 
 def restart_mode():
@@ -137,8 +155,6 @@ def main():
                 if BTN_BLUE in PRESSED_BUTTONS or BTN_YELLOW in PRESSED_BUTTONS:
                     pixelmapper.change_base_color(b=-AXIS_INPUT[1])
 
-            if ACTIVE_MODE:
-                ACTIVE_MODE.tick()
         except KeyboardInterrupt:
             print("\n" "Interrupted")
             exit(0)
