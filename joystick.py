@@ -8,6 +8,7 @@ from modes.joyspin import Joyspin
 from modes.chase import Chase
 from modes.simplecolor import SimpleColor
 from modes.pulse import Pulse
+from modes.rainbow import Rainbow
 from os import environ
 import os
 import time
@@ -21,18 +22,6 @@ pixelmapper = PixelMapper(
         Strand(192, 34),
         Strand(256, 34),
      ]
-    # [
-    #     Strand(0, 15),
-    #     Strand(15, 15, inverted=True),
-    #     Strand(64, 15),
-    #     Strand(79, 15, inverted=True),
-    #     Strand(128, 15),
-    #     Strand(143, 15, inverted=True),
-    #     Strand(192, 15),
-    #     Strand(207, 15, inverted=True),
-    #     Strand(256, 15),
-    #     Strand(271, 15, inverted=True),
-    # ]
 )
 pixelcontroller = PixelController()
 OPTS = None
@@ -40,10 +29,11 @@ JOYSTICKS = []
 AXIS_INPUT = [0, 0]
 PRESSED_BUTTONS = set()
 MODES = [
-    SimpleColor(pixelmapper, pixelcontroller),
-    Chase(pixelmapper, pixelcontroller),
+    # SimpleColor(pixelmapper, pixelcontroller),
+    # Chase(pixelmapper, pixelcontroller),
     # Joyspin(pixelmapper, pixelcontroller),
-    Pulse(pixelmapper, pixelcontroller, 300),
+    # Pulse(pixelmapper, pixelcontroller, 300),
+    Rainbow(pixelmapper, pixelcontroller, length=20),
 ]
 ACTIVE_MODE_IDX = -1
 ACTIVE_MODE = None

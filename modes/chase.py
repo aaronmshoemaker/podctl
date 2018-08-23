@@ -34,12 +34,8 @@ class Chase:
             s.set_solid_color()
             s.leds[0:trail_len] = self.pixelmapper.get_trail(trail_len, self.pixelmapper.base_color,
                                                              invert=self.switch_direction)
-            s.leds = self.rotate(s.leds, chase_head)
+            s.leds = self.pixelmapper.rotate(s.leds, chase_head)
 
             s.attributes["chase_head"] = (chase_head + rotate_step) % s.length
 
         self.pixelcontroller.set_pixel_map(self.pixelmapper)
-
-    @staticmethod
-    def rotate(l, n):
-        return l[-n:] + l[:-n]

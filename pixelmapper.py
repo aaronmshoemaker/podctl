@@ -48,6 +48,24 @@ class PixelMapper(object):
             random.randint(min_brightness, MAX_BRIGHTNESS)
         )
 
+    def get_metastrand_leds(self):
+        leds = []
+
+        for s in self.strands:
+            leds.extend(s.leds)
+
+        return leds
+
+    def set_metastrand_leds(self, leds):
+        # Create an array of leds to cover all pixels in all strands, then map the input leds over it.
+        meta_leds = self.get_pixels_solid(COLOR_BLANK, self.total_leds)
+        meta_leds[0:len(leds)] = leds
+        index = 0
+
+        for s in self.strands:
+            s.leds = meta_leds[index:index + s.length]
+            index += s.length
+
     @staticmethod
     def get_pixels_solid(color, count=512):
         return [color] * count
@@ -61,9 +79,9 @@ class PixelMapper(object):
 
     @staticmethod
     def get_trail(length, head_color, tail_color=COLOR_BLANK, invert=False):
-        trail_pixels = PixelMapper.get_color_sequence(head_color, tail_color, length)
+        sequence = PixelMapper.get_color_sequence(head_color, tail_color, length)
 
-        return trail_pixels if invert else trail_pixels[::-1]
+        return sequence if invert else sequence[::-1]
 
     @staticmethod
     def shift_color(color, amount):
@@ -95,6 +113,24 @@ class PixelMapper(object):
             color_sequence.append(current_color)
 
         return color_sequence
+
+    @staticmethod
+    def rotate(lst, n=1):
+        return lst[-n:] + lst[:-n]
+
+    @staticmethod
+    def get_rainbow(length, invert=False):
+        trans_count = int(length / 5)
+        sequence = []
+
+        sequence.extend(PixelMapper.get_color_sequence((255, 0, 0), (255, 127, 0), trans_count))
+        sequence.extend(PixelMapper.get_color_sequence((255, 127, 0), (255, 255, 0), trans_count))
+        sequence.extend(PixelMapper.get_color_sequence((255, 255, 0), (0, 255, 0), trans_count))
+        sequence.extend(PixelMapper.get_color_sequence((0, 255, 0), (0, 0, 255), trans_count))
+        sequence.extend(PixelMapper.get_color_sequence((0, 0, 255), (75, 0, 130), trans_count))
+        sequence.extend(PixelMapper.get_color_sequence((75, 0, 130), (148, 0, 211), trans_count))
+
+        return sequence if invert else sequence[::-1]
 
 
 class Strand(object):
