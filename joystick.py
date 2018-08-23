@@ -10,6 +10,7 @@ from modes.simplecolor import SimpleColor
 from modes.pulse import Pulse
 from os import environ
 import os
+import time
 
 # TODO: Fix class variable names
 pixelmapper = PixelMapper(
@@ -74,7 +75,7 @@ def proc_event(event):
         restart_mode()
 
     # Handle shutdown signal
-    if len(PRESSED_BUTTONS.intersection(SHUTDOWN_SEQUENCE)) == len(SHUTDOWN_SEQUENCE):
+    if event.type == pygame.JOYBUTTONDOWN and len(PRESSED_BUTTONS.intersection(SHUTDOWN_SEQUENCE)) == len(SHUTDOWN_SEQUENCE):
         shutdown()
 
     if ACTIVE_MODE:
@@ -107,8 +108,13 @@ def restart_mode():
 
 
 def shutdown():
-    pixelcontroller.fade(128, 0, 0, 0, 0, 0, 4, 20)
-    os.system("init 0")
+    pixelcontroller.set_color_alternating(COLOR_STATUS_SHUTDOWN, COLOR_STATUS_SHUTDOWN_ALT)
+    time.sleep(2)
+
+    try:
+        os.system("init 0")
+    except:
+        pass
 
 
 def get_opts():
@@ -138,7 +144,7 @@ def main():
             print("Detected joystick '%s'" % JOYSTICKS[-1].get_name())
 
     # Set initial color to indicate readiness
-    pixelcontroller.set_color(0, 64, 0)
+    pixelcontroller.set_color_alternating(COLOR_STATUS_READY, COLOR_STATUS_READY_ALT)
 
     while 1:
         try:

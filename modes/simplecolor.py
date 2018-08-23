@@ -18,7 +18,7 @@ class SimpleColor:
 
         # If the base color is currently off, give it an initial value
         if sum(self.pixelmapper.base_color) == 0:
-            self.pixelmapper.base_color = (64, 0, 0)
+            self.pixelmapper.base_color = (96, 0, 0)
 
         for s in self.pixelmapper.strands:
             s.leds = [self.pixelmapper.base_color] * s.length
@@ -33,29 +33,11 @@ class SimpleColor:
         pass
 
     def input(self, event, axis, buttons):
-        # self.axis_state = axis
-        # self.pressed_buttons = buttons
-        #
-        # self.tick()
         pass
 
     def tick(self):
-        # if self.pressed_buttons and sum(self.axis_state) != 0:
-        #     if BTN_RED in self.pressed_buttons or BTN_YELLOW in self.pressed_buttons:
-        #         self.pixelmapper.change_base_color(r=-self.axis_state[1])
-        #     if BTN_GREEN in self.pressed_buttons or BTN_YELLOW in self.pressed_buttons:
-        #         self.pixelmapper.change_base_color(g=-self.axis_state[1])
-        #     if BTN_BLUE in self.pressed_buttons or BTN_YELLOW in self.pressed_buttons:
-        #         self.pixelmapper.change_base_color(b=-self.axis_state[1])
-        #
-        #     self.refresh_color()
-        #
-        #     print self.pixelmapper.base_color
-
         if self.pixelmapper.base_color_changed:
             self.refresh_color()
-
-
 
     def refresh_color(self):
         for s in self.pixelmapper.strands:

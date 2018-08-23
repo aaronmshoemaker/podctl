@@ -41,23 +41,23 @@ class PixelMapper(object):
 
         return pixel_map
 
-    def get_random_color(self):
+    def get_random_color(self, min_brightness=15):
         return (
-            random.randint(0, MAX_BRIGHTNESS),
-            random.randint(0, MAX_BRIGHTNESS),
-            random.randint(0, MAX_BRIGHTNESS)
+            random.randint(min_brightness, MAX_BRIGHTNESS),
+            random.randint(min_brightness, MAX_BRIGHTNESS),
+            random.randint(min_brightness, MAX_BRIGHTNESS)
         )
 
     @staticmethod
-    def get_pixels_solid(r=0, g=0, b=0, count=512):
-        return [(r, g, b)] * count
+    def get_pixels_solid(color, count=512):
+        return [color] * count
 
     @staticmethod
-    def get_pixels_alternating(even=True, r=0, g=0, b=0, count=512):
+    def get_pixels_alternating(color_1, color_2=COLOR_BLANK, even=True, count=512):
         if even:
-            return [COLOR_BLANK, (r, g, b)] * int(count / 2)
+            return [color_2, color_1] * int(count / 2)
         else:
-            return [(r, g, b), COLOR_BLANK] * int(count / 2)
+            return [color_1, color_2] * int(count / 2)
 
     @staticmethod
     def get_trail(length, head_color, tail_color=COLOR_BLANK, invert=False):
@@ -126,8 +126,8 @@ class Strand(object):
     def leds(self):
         del self.__leds
 
-    def set_solid_color(self, r=0, g=0, b=0):
-        self.__leds = PixelMapper.get_pixels_solid(r, g, b, self.length)
+    def set_solid_color(self, color=COLOR_BLANK):
+        self.__leds = PixelMapper.get_pixels_solid(color, self.length)
 
     def set_range(self, pixels, index=0):
         self.__leds[index:len(pixels)] = pixels
