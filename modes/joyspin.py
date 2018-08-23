@@ -22,7 +22,7 @@ class Joyspin:
         print("%s started" % __name__)
 
     def stop(self):
-        self.pixelcontroller.set_color(0, 0, 0)
+        self.pixelcontroller.set_color()
         print("%s stopped" % __name__)
 
     def input(self, event, axis, buttons):

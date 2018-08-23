@@ -40,7 +40,7 @@ AXIS_INPUT = [0, 0]
 PRESSED_BUTTONS = set()
 MODES = [
     SimpleColor(pixelmapper, pixelcontroller),
-    Chase(pixelmapper, pixelcontroller, 300),
+    Chase(pixelmapper, pixelcontroller),
     # Joyspin(pixelmapper, pixelcontroller),
     Pulse(pixelmapper, pixelcontroller, 300),
 ]

@@ -1,7 +1,7 @@
 import lighting.opc
 import time
 from pixelmapper import PixelMapper
-
+from constants import *
 
 class PixelController:
     fadecandy = None
@@ -11,14 +11,14 @@ class PixelController:
 
         # Set initial state for all controllers
         for i in range(0, 7):
-            self.fadecandy.put_pixels([(0, 0, 0)] * 512, i)
+            self.fadecandy.put_pixels([COLOR_BLANK] * 512, i)
 
     def set_pixel_map(self, pixelmapper, channel_count=1):
         for i in range(channel_count):
             pixels = pixelmapper.get_map()
             self.fadecandy.put_pixels(pixels, channel=i)
 
-    def set_color(self, r, g, b, channel_count=1):
+    def set_color(self, r=0, g=0, b=0, channel_count=1):
         for i in range(channel_count):
             self.fadecandy.put_pixels(PixelMapper.get_pixels_solid(r, g, b), channel=i)
 

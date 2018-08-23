@@ -1,16 +1,11 @@
-import random
-
+from collections import deque
 
 class Pulse:
     pixelmapper = None
     pixelcontroller = None
     tick_ms = None
-    axis_state = None
-    pressed_buttons = None
-    cycle_steps = 10
-    step_count = 0
-    current_color = (0, 0, 0)
-    step_color_offset = None
+    pulse_steps = 10
+    color_queue = deque()
 
     def __init__(self, pixelmapper, pixelcontroller, tick_ms=100):
         self.pixelmapper = pixelmapper
@@ -18,32 +13,23 @@ class Pulse:
         self.tick_ms = tick_ms
 
     def start(self):
-        self.set_random_color_target()
         print("%s started" % __name__)
 
     def stop(self):
-        self.pixelcontroller.set_color(0, 0, 0)
+        self.pixelcontroller.set_color()
         print("%s stopped" % __name__)
 
     def input(self, event, axis, buttons):
         pass
 
     def tick(self):
-        self.current_color = self.pixelmapper.shift_color_offset(self.current_color, self.step_color_offset)
-        self.step_count = (self.step_count + 1) % self.cycle_steps
-        self.pixelcontroller.set_color(*self.current_color)
+        if len(self.color_queue) == 0:
+            self.load_color_queue(self.pixelmapper.base_color, self.pixelmapper.get_random_color())
 
-        if self.step_count == 0:
-            # Choose a new target color
-            self.set_random_color_target()
+        self.pixelmapper.base_color = self.color_queue.popleft()
+        self.pixelcontroller.set_color(*self.pixelmapper.base_color)
 
-    def set_random_color_target(self):
-        self.pixelmapper.base_color = self.pixelmapper.get_random_color()
-        self.recalculate_offsets()
-
-    def recalculate_offsets(self):
-        self.step_color_offset = (
-            int((self.pixelmapper.base_color[0] - self.current_color[0]) / self.cycle_steps),
-            int((self.pixelmapper.base_color[1] - self.current_color[1]) / self.cycle_steps),
-            int((self.pixelmapper.base_color[2] - self.current_color[2]) / self.cycle_steps)
-        )
+    def load_color_queue(self, start_color, end_color):
+        for c in self.pixelmapper.get_color_sequence(start_color, end_color, self.pulse_steps):
+            self.color_queue.append(c)
+        pass

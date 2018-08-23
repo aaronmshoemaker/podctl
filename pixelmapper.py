@@ -1,12 +1,12 @@
 import random
+from constants import *
 
 
 class PixelMapper(object):
     strands = None
     max_led_index = 0
     total_leds = 0
-    max_brightness = 128    # Max is 256. Artificially cap brightness to limit amperage draw. Todo: automatically set based on available power supply.
-    base_color = (0, 0, 0)
+    base_color = COLOR_BLANK
     base_color_changed = False
 
     def __init__(self, strands):
@@ -26,15 +26,15 @@ class PixelMapper(object):
 
     def change_base_color(self, r=0, g=0, b=0):
         self.base_color = (
-            (self.base_color[0] + r) % self.max_brightness,
-            (self.base_color[1] + g) % self.max_brightness,
-            (self.base_color[2] + b) % self.max_brightness
+            (self.base_color[0] + r) % MAX_BRIGHTNESS,
+            (self.base_color[1] + g) % MAX_BRIGHTNESS,
+            (self.base_color[2] + b) % MAX_BRIGHTNESS
         )
 
         self.base_color_changed = True
 
     def get_map(self):
-        pixel_map = [(0, 0, 0)] * self.max_led_index
+        pixel_map = [COLOR_BLANK] * self.max_led_index
 
         for s in self.strands:
             pixel_map[s.start_index:s.end_index] = s.leds
@@ -43,9 +43,9 @@ class PixelMapper(object):
 
     def get_random_color(self):
         return (
-            random.randint(0, self.max_brightness),
-            random.randint(0, self.max_brightness),
-            random.randint(0, self.max_brightness)
+            random.randint(0, MAX_BRIGHTNESS),
+            random.randint(0, MAX_BRIGHTNESS),
+            random.randint(0, MAX_BRIGHTNESS)
         )
 
     @staticmethod
@@ -55,17 +55,13 @@ class PixelMapper(object):
     @staticmethod
     def get_pixels_alternating(even=True, r=0, g=0, b=0, count=512):
         if even:
-            return [(0, 0, 0), (r, g, b)] * int(count / 2)
+            return [COLOR_BLANK, (r, g, b)] * int(count / 2)
         else:
-            return [(r, g, b), (0, 0, 0)] * int(count / 2)
+            return [(r, g, b), COLOR_BLANK] * int(count / 2)
 
     @staticmethod
-    def get_trail(color, length, invert=False):
-        trail_pixels = []
-        variance = int(max(color) / length)
-
-        for i in range(0, length):
-            trail_pixels.append(PixelMapper.shift_color(color, -variance * i))
+    def get_trail(length, head_color, tail_color=COLOR_BLANK, invert=False):
+        trail_pixels = PixelMapper.get_color_sequence(head_color, tail_color, length)
 
         return trail_pixels if invert else trail_pixels[::-1]
 
@@ -80,8 +76,25 @@ class PixelMapper(object):
             color[1] + color_offset[1]), PixelMapper.bounded_value(color[2] + color_offset[2])
 
     @staticmethod
-    def bounded_value(val, minimum=0, maximum=max_brightness):
+    def bounded_value(val, minimum=0, maximum=MAX_BRIGHTNESS):
         return min(max(val, minimum), maximum)
+
+    @staticmethod
+    def get_color_sequence(color_1, color_2, steps):
+        color_sequence = []
+        step_color_offset = (
+            int((color_2[0] - color_1[0]) / steps),
+            int((color_2[1] - color_1[1]) / steps),
+            int((color_2[2] - color_1[2]) / steps)
+        )
+
+        current_color = color_1
+
+        for i in range(steps):
+            current_color = PixelMapper.shift_color_offset(current_color, step_color_offset)
+            color_sequence.append(current_color)
+
+        return color_sequence
 
 
 class Strand(object):

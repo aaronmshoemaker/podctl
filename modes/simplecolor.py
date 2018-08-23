@@ -26,7 +26,7 @@ class SimpleColor:
 
     def stop(self):
         for s in self.pixelmapper.strands:
-            s.leds = [(0, 0, 0)] * s.length
+            s.leds = [COLOR_BLANK] * s.length
         self.pixelcontroller.set_pixel_map(self.pixelmapper)
 
         print("%s stopped" % __name__)
