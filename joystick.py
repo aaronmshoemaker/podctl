@@ -9,6 +9,7 @@ from modes.chase import Chase
 from modes.simplecolor import SimpleColor
 from modes.pulse import Pulse
 from modes.rainbow import Rainbow
+from modes.randomizer import Randomizer
 from os import environ
 import os
 import time
@@ -29,11 +30,13 @@ JOYSTICKS = []
 AXIS_INPUT = [0, 0]
 PRESSED_BUTTONS = set()
 MODES = [
-    # SimpleColor(pixelmapper, pixelcontroller),
-    # Chase(pixelmapper, pixelcontroller),
+    SimpleColor(pixelmapper, pixelcontroller),
+    Chase(pixelmapper, pixelcontroller),
     # Joyspin(pixelmapper, pixelcontroller),
-    # Pulse(pixelmapper, pixelcontroller, 300),
+    Pulse(pixelmapper, pixelcontroller, tick_ms=300),
     Rainbow(pixelmapper, pixelcontroller, length=20),
+    Randomizer(pixelmapper, pixelcontroller, tick_ms=300, seconds_per_mode=30),
+    Randomizer(pixelmapper, pixelcontroller, tick_ms=50, seconds_per_mode=10)
 ]
 ACTIVE_MODE_IDX = -1
 ACTIVE_MODE = None
